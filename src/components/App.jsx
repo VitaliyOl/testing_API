@@ -3,7 +3,7 @@ import { GlobalStyle } from './GlobalStyle';
 import { ToastContainer } from 'react-toastify';
 import Searchbar from './Searchbar/Searchbar';
 import { ImageGallery } from './ImageGallery/ImageGallery';
-import { GetImages } from './services/fetchApi';
+import { GetImages } from '../services/fetchApi';
 import Loader from './Loader/Loader';
 
 import React, { Component } from 'react';
