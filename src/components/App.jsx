@@ -5,6 +5,7 @@ import Searchbar from './Searchbar/Searchbar';
 import { ImageGallery } from './ImageGallery/ImageGallery';
 import { GetImages } from '../services/fetchApi';
 import Loader from './Loader/Loader';
+import Modal from './Modal/Modal';
 
 import React, { Component } from 'react';
 
@@ -14,8 +15,22 @@ export class App extends Component {
     images: [],
     page: 1,
 
+    showModal: false,
+
     isLoading: false,
     error: false,
+    largeImageUrl: '',
+  };
+
+  getLargeImgUrl = imgUrl => {
+    this.setState({ largeImageUrl: imgUrl });
+    this.toggleModal();
+  };
+
+  toggleModal = () => {
+    this.setState(state => ({
+      showModal: !state.showModal,
+    }));
   };
 
   async componentDidUpdate(prevProps, prevState) {
@@ -29,7 +44,7 @@ export class App extends Component {
         this.setState({ isLoading: true });
         const images = await GetImages(query, page);
         this.setState(prevState => ({
-          images: [...prevState.images, images],
+          images: [...prevState.images, ...images],
         }));
       } catch (error) {
         this.setState({ error: true });
@@ -43,12 +58,15 @@ export class App extends Component {
   };
 
   render() {
-    const { isLoader, images } = this.state;
+    const { isLoader, images, showModal, largeImageUrl } = this.state;
     return (
       <Container>
         <GlobalStyle />
         <Searchbar onSubmit={this.getQuery} />
-        <ImageGallery items={images} />
+        {showModal && (
+          <Modal largeImg={largeImageUrl} onClose={this.toggleModal} />
+        )}
+        <ImageGallery images={images} onClick={this.getLargeImgUrl} />
 
         {isLoader && <Loader />}
         <ToastContainer />
